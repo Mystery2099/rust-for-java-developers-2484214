@@ -1,12 +1,21 @@
+type Link<T> = Option<Box<Node<T>>>;
+
 #[derive(Debug)]
-pub struct LinkedList<T> {
-    head: Option<Box<Node<T>>>,
-}
 struct Node<T> {
     value: T,
-    next: Option<Box<Node<T>>>,
+    next: Link<T>,
+}
+impl<T> Node<T> {
+    fn get(&self) -> &T {
+        &self.value
+    }
 }
 /// Hint: To avoid ownership issues, create two types: oen for the list and one for nodes within the list
+
+#[derive(Debug)]
+pub struct LinkedList<T> {
+    head: Link<T>,
+}
 
 impl<T> LinkedList<T> {
     fn new() -> Self {
@@ -15,12 +24,31 @@ impl<T> LinkedList<T> {
 
     // Add an item to the end
     fn push(&mut self, item: T) {
-        if (self.)
+        let new_node = Some(Box::new(Node {
+            value: item,
+            next: None,
+        }));
+        if self.head.is_none() == true {
+            self.head = new_node;
+        } else {
+            let mut node = self.head.as_mut().unwrap();
+            while node.next.is_some() {
+                node = node.next.as_mut().unwrap();
+            }
+            node.next = new_node;
+        }
     }
 
     // Remove an item from the start
     fn pop(&mut self) -> Option<T> {
-        todo!()
+        let head = self.head.take();
+        let mut result: Option<T> = None;
+        if head.is_some() {
+            let old_head = head.unwrap();
+            self.head = old_head.next;
+            result = Some(old_head.value);
+        }
+        return result;
     }
 
     // TODO: optional
